@@ -1,0 +1,93 @@
+Before the fork
+
+Create a transaction spending a small amount of BTC to 1335 P2SH scriptPubKeys
+* The amount used here is 1 BTC
+
+The redeemScript is a form of :
+
+<redeemscript>
+
+This is essentially a a 15-of-15 multisig,  where one of the keys is owned by
+the spender and the other 14 pubkeys have not been determined yet.
+What is being committed to instead is a very short DER-encoded signature where
+both (r,s) are "1".
+
+A public key will be recovered from the sighash and the signature and pushed
+in scriptsig along with the owners' signature.
+
+When the script executes, it duplicates the short signature and the recovered
+public key 14 times, and rearranges the elements for a CHECKMULTISIG.
+15-of-15 was chosen for it being the maximum standard multisig script in a
+pay-to-scripthash.
+
+The number of outputs in the the funding transaction transaction is 1335.
+It's a fairly huge transaction, but standard by all accounts.
+* about 43KB
+
+
+Pre-sign the replay-protected transaction
+
+The owner now now crafts a transaction spending all 1335 inputs to a single
+output.
+Signing the transaction is done in two parts, first a normal signature for the
+owner's public key (the one committed to in the script) is computed for each
+of the 1335 checksig operations, then, an ecdsa pubkey recovery operation is
+done for each of the 1335 sighashes and the committed signature (1,1).
+
+Eventually, the scriptsig for an input in this transaction would look like :
+
+0 <signature> <pubkey> <redeemscript>
+
+Once the transaction is complete, the owner waits for the fork event.
+
+
+After the fork
+
+For replay protection to work, the owner now must mine the pre-signed
+transaction on the forked chain.
+The 1335 inputs, all redeeming a 15-of-15 multisig will cause the sigops count
+for the transaction to cross 8,000,000 and reach a size of ~290KB.
+The transaction will still be valid on the fork where the maximum sigops cost
+is twice as large, but invalid on mainnet.  Once the transaction has been
+mined, the owner should wait for the block to be buried.
+
+After enough work was added on the forked chain, it is now safe to spend the
+1335 inputs individually on mainnet as "tainted" coins.
+The same process as pre-signing is needed per input.  Sign normally for the
+public key, and recover a public key for the sighash and signature.
+
+The owner can make use of a process such as Joinmarket's jmtainter.py, or
+chainspl.it's interface for publishing the replay-protected input.
+
+
+Further thoughts :
+
+1.
+The spend on the forked chain is designed to be replay-protected, so we use
+a sigops count which is higher than the maximum on mainnet, 8 million.
+
+This makes the transaction non-standard on the forked chain because the max
+sigops count for a standard transaction is exactly 8 million sigops.
+It is possible that we can fine tune the sigops count to be exactly 8 million,
+and if this makes the transaction standard in terms of sigops count, then this
+creates an even better setup because of both standardness /and/ protection
+from replays, since the only way for such a transaction to hit mainnet is only
+by tweaking a block in a very specific way which is difficult to achieve.
+
+2.
+
+The 1335 protected utxos on mainnet can also be pre-signed using a scheme
+similar to what is implemented by waxwing here :
+https://github.com/JoinMarket-Org/joinmarket-clientserver/blob/master/scripts/jmtainter.py
+
+The semantics for a single|anyonecanpay pair of (input,output) both on indexes
+zero in a transaction are such that this signed pair is valid in any other 
+transaction, so by pre-signing such a pair back to themselves, the owner can
+then distribute it and anyone can build on top of it and make use of the
+replay protection that it allows.
+
+By building the (input,output) pair such that a /larger/ amount is paid than
+the input has, the user is able to pay the owner through the act of transacting
+with the signed pair.  This is a way for the owner to recoup whatever losses.
+
+-- arubi
