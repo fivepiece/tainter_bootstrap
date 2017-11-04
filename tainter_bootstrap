@@ -1,0 +1,64 @@
+# 15-of-15 in p2sh using very short signagures and pubkey recovery
+# the following are size calculations and finally sigops
+#
+tx (1335->1, p2sh->p2sh*):
+# * can be any type output really, but bare checksig scripts will change sigop cost
+
+tx:
+version + nlocktime + nin + nout + sighash = 4 + 4 + 3 + 1 = 12
+
+input:
+txid + index + sequence =  32 + 4 + 4 = 40
+
+empty_input:
+input + size(0) = 40 + 1 = 41
+
+script : 6B09300602010402010401766E6F6F6F765F210256B0433B888C603A6A2E4DC29801A8B8023D116D3BF179B1AE25840B71D2719C6C766E6F6F6F765FAE
+size(script) = 61
+
+scriptsig:
+script + push(script) + signature + push(signature) + pubkey + push(pubkey) + 0 = # here pubkey is a single recovered pubkey
+61 + 1 + 73 + 1 + 33 + 1 + 1 = 171
+
+spend_input:
+input + scriptsig size(scriptsig) = 40 + 171 + 1 = 212
+
+output:
+amount + size(p2pkh) + p2pkh = 8 + 1 + 23 = 32
+
+spend_tx:
+tx + 1335*spend_input + output = 12 + 1335*212 + 32 = 283064  #  283,064 bytes transaction
+
+sign_tx_sigops:
+1335*15 = 20025 # at 80100 sigops cost )
+
+sigops left:
+160000 - sign_tx_sigops = 79900
+
+weight left:
+8000000 - (spend_tx * 4) = 8000000 - 1132256 = 6867744
+
+
+# funding the tainter (on mainnet, before the fork)
+#
+tx (1->1335, p2pkh*->p2sh )
+# * can be any scriptpubkey
+
+tx = 12
+input = 40
+
+scriptsig:
+signature + push(signature) + pubkey + push(pubkey) = 73 + 1 + 33 +1 = 108
+
+fund_input = input + size(scriptsig) + scriptsig = 40 + 1 + 108 = 149
+output = 32
+
+fund_tx:
+tx + fund_input + 1335*output = 12 + 149 + 1335*32 = 42881 # 42,881 bytes transaction
+
+fund_tx_weight:
+42881 * 4 = 171524 # 171,524 weight units in mainnet
+
+# weight and sigops cost on mainnet should both be standard
+
+-- arubi
