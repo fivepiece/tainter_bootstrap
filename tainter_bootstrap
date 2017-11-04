@@ -60,5 +60,8 @@ fund_tx_weight:
 42881 * 4 = 171524 # 171,524 weight units in mainnet
 
 # weight and sigops cost on mainnet should both be standard
+# after the tainter tx has been mined and buried on the fork,
+# we now have 1335 seed inputs which we can use individualy
+# on mainnet
 
 -- arubi
