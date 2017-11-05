@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# mpzGUE6eYX8Zoy7LyVFjxP1eYpzjijFvLh
+# cQPUDCZ1XMdJ8wDY9S6uzsuzqeimz6Y9Vu1xhxjrVwJWSo3aFeZk
+
+owner_pubkey='02B67CDE07B3E77119652DD1B47A7F18F6D8EBB937DF521D4F4C9559762ED00882'
+owner_privkey='53BBF3C17F4C073D0C3B4C816BF693011F273E612ABFF29E01DACD8199ED261D'
+
+# redeemscript :
+
+rdmscript="TOALTSTACK 0x09 0x300602010102010101 DUP 2DUP 3DUP 3DUP 3DUP DUP 15 0x21 0x${owner_pubkey} FROMALTSTACK DUP 2DUP 3DUP 3DUP 3DUP DUP 15 CHECKMULTISIG"
+
+hexrdm="$( script_serialize "${rdmscript}" )"
+echo "hexrdm : ${hexrdm}" 1>&2
+
+# scripthash :
+
+scrhash="$( spk_pay2shash "${rdmscript}" )"
+
+hexspk="$( script_serialize "${scrhash}" )"
+
+
+# p2sh paying 0.00074 to the scripthash :
+
+fund_output="$( tx_mkout_p2sh 0.00074 "${rdmscript}" )"
