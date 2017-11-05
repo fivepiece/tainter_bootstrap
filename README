@@ -5,7 +5,7 @@ Create a transaction spending a small amount of BTC to 1335 P2SH scriptPubKeys
 
 The redeemScript is a form of :
 
-<redeemscript>
+TOALTSTACK 0x09 0x300602010102010101 DUP 2DUP 3DUP 3DUP 3DUP DUP 15 0x21 0x<owner_pubkey> FROMALTSTACK DUP 2DUP 3DUP 3DUP 3DUP DUP 15 CHECKMULTISIG
 
 This is essentially a a 15-of-15 multisig,  where one of the keys is owned by
 the spender and the other 14 pubkeys have not been determined yet.
@@ -36,7 +36,7 @@ done for each of the 1335 sighashes and the committed signature (1,1).
 
 Eventually, the scriptsig for an input in this transaction would look like :
 
-0 <signature> <pubkey> <redeemscript>
+0 <owner_signature> <recovered_pubkey> <redeemscript>
 
 Once the transaction is complete, the owner waits for the fork event.
 
