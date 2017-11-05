@@ -46,7 +46,7 @@ After the fork
 For replay protection to work, the owner now must mine the pre-signed
 transaction on the forked chain.
 The 1335 inputs, all redeeming a 15-of-15 multisig will cause the sigops count
-for the transaction to cross 8,000,000 and reach a size of ~290KB.
+for the transaction to cross 80,000 and reach a size of ~290KB.
 The transaction will still be valid on the fork where the maximum sigops cost
 is twice as large, but invalid on mainnet.  Once the transaction has been
 mined, the owner should wait for the block to be buried.
