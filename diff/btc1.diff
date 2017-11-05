@@ -1,0 +1,14 @@
+diff --git a/src/policy/policy.h b/src/policy/policy.h
+index e69acc1ad..6d6916e2a 100644
+--- a/src/policy/policy.h
++++ b/src/policy/policy.h
+@@ -27,7 +27,8 @@ static const unsigned int MAX_STANDARD_TX_WEIGHT = 400000;
+ /** Maximum number of signature check operations in an IsStandard() P2SH script */
+ static const unsigned int MAX_P2SH_SIGOPS = 15;
+ /** The maximum number of sigops we're willing to relay/mine in a single tx */
+-static const unsigned int MAX_STANDARD_TX_SIGOPS_COST = 16000;
++//static const unsigned int MAX_STANDARD_TX_SIGOPS_COST = 16000;
++static const unsigned int MAX_STANDARD_TX_SIGOPS_COST = MaxBlockSigOpsCost(true);
+ /** Default for -maxmempool, maximum megabytes of mempool memory usage */
+ static const unsigned int DEFAULT_MAX_MEMPOOL_SIZE = 300;
+ /** Default for -incrementalrelayfee, which sets the minimum feerate increase for mempool limiting or BIP 125 replacement **/
