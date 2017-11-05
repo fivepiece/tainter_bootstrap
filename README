@@ -64,11 +64,11 @@ Further thoughts :
 
 1.
 The spend on the forked chain is designed to be replay-protected, so we use
-a sigops count which is higher than the maximum on mainnet, 8 million.
+a sigops count which is higher than the maximum on mainnet, 80k.
 
 This makes the transaction non-standard on the forked chain because the max
-sigops count for a standard transaction is exactly 8 million sigops.
-It is possible that we can fine tune the sigops count to be exactly 8 million,
+sigops count for a standard transaction is exactly 80k sigops.
+It is possible that we can fine tune the sigops count to be exactly 80k,
 and if this makes the transaction standard in terms of sigops count, then this
 creates an even better setup because of both standardness /and/ protection
 from replays, since the only way for such a transaction to hit mainnet is only
