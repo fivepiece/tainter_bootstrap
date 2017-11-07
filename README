@@ -1,3 +1,13 @@
+Examples are live on testnet5
+
+funding transaction  :
+eebebe2cfaf0b9b98fa9fc9b56d07f154c0c8c3bcded1a8e0117a4e849c2d9fd
+
+spending transaction :
+7464b1fe1ccb973f3ba86e2a54b45e0073c5c16d5c4d451fdaf6528f1d7a727e
+
+
+
 Before the fork
 
 Create a transaction spending a small amount of BTC to 1335 P2SH scriptPubKeys
